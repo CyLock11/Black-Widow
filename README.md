@@ -77,8 +77,5 @@ black-widow/
 └── scan.py            # Core scanning functionality 🔍
 ```
 
-### 📜 License 📜
-This project is licensed under the MIT License - see the LICENSE file for details. ⚖️
-
 ### ⚠️ Disclaimer ⚠️
 This tool is provided for educational and professional security testing purposes only. Users are responsible for ensuring they have proper authorization before scanning any networks or systems. 🔒
