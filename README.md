@@ -15,7 +15,7 @@
 ### 🔧 Installation 🔧
 
 ```bash
-git clone https://github.com/yourusername/black-widow.git
+git clone https://github.com/CyLock11/Black-Widow.git
 cd black-widow
 chmod +x install.sh
 sudo ./install.sh
