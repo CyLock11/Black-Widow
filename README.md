@@ -8,9 +8,9 @@
 ### 🚀 Features 🚀
 * **🕵️ Stealth TCP SYN Scanning**: Performs half-open connections to detect open ports without completing the TCP handshake
 * **🎯 Customizable Port Range**: Scan specific ports, port ranges, or comma-separated port lists
-* **⚡ Multi-threaded**: Configurable thread count for faster scanning
+* **⚡ Multi-threaded**: Uses ThreadPoolExecutor for efficient concurrent scanning
 * **📊 Clean Output**: Color-coded results for better readability
-* **💻 Easy Installation**: Simple bash script to install all dependencies
+* **🔍 Verbose Mode**: Option to display open/filtered ports for comprehensive scanning
 
 ### 🔧 Installation 🔧
 
@@ -24,7 +24,7 @@ sudo ./install.sh
 ### 📝 Usage 📝
 
 ```
-blackwidow.py [-h] -t TARGET [-p PORTS] [--threads THREADS]
+./blackwidow.py [-h] -t TARGET [-p PORTS] [-v]
 ```
 
 ### 🔍 Arguments 🔍
@@ -33,32 +33,39 @@ blackwidow.py [-h] -t TARGET [-p PORTS] [--threads THREADS]
    * Single port: `-p 80`
    * Port range: `-p 1-1000`
    * Multiple ports: `-p 22,80,443`
-* `--threads THREADS`: Maximum number of threads (optional, default: 20) 🧵
+   * All ports: `-p -`
+* `-v`: Enable verbose mode to show open/filtered ports (optional) 🔊
 * `-h, --help`: Show help message and exit ❓
 
 ### 💡 Examples 💡
 Scan default ports on a target:
 
 ```bash
-blackwidow.py -t 192.168.1.1
+./blackwidow.py -t 192.168.1.1
 ```
 
 Scan specific port range:
 
 ```bash
-blackwidow.py -t 192.168.1.1 -p 1-100
+./blackwidow.py -t 192.168.1.1 -p 1-100
 ```
 
 Scan specific ports:
 
 ```bash
-blackwidow.py -t 192.168.1.1 -p 22,80,443
+./blackwidow.py -t 192.168.1.1 -p 22,80,443
 ```
 
-Scan with 40 threads:
+Scan all ports:
 
 ```bash
-blackwidow.py -t 192.168.1.1 -p 1-1000 --threads 40
+./blackwidow.py -t 192.168.1.1 -p-
+```
+
+Enable verbose mode:
+
+```bash
+./blackwidow.py -t 192.168.1.1 -p 1-1000 -v
 ```
 
 ### 📚 Dependencies 📚
@@ -71,11 +78,14 @@ blackwidow.py -t 192.168.1.1 -p 1-1000 --threads 40
 ### 📁 Project Structure 📁
 
 ```
-black-widow/
+black_widow/
 ├── install.sh         # Installation script 🔧
 ├── blackwidow.py      # Main executable 🕷️
 └── scan.py            # Core scanning functionality 🔍
 ```
+
+### 🔄 Progress Tracking 🔄
+The tool provides real-time feedback on scanning progress, displaying the number of active threads and notifying when the scan is complete.
 
 ### ⚠️ Disclaimer ⚠️
 This tool is provided for educational and professional security testing purposes only. Users are responsible for ensuring they have proper authorization before scanning any networks or systems. 🔒
