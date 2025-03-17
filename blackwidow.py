@@ -29,7 +29,12 @@ def filter_args(target, ports):
 
     match_target = re.match(regex_target, target)
 
-    if '-' in ports:
+    if ports == '-':
+
+        regex_ports = r'^\-$'
+        port_type = "all"
+
+    elif '-' in ports:
 
         regex_ports = r'^([0-9]{1,5})\-([0-9]{1,5})$'
         port_type = "g"
@@ -56,7 +61,11 @@ def filter_args(target, ports):
 
 def parse_ports(ports, port_type):
 
-    if port_type == 'g':
+    if port_type == 'all':
+
+        return range(1, 65536)
+
+    elif port_type == 'g':
 
         split_ports = ports.split('-')
         filter_ports = tuple([port for port in range(int(split_ports[0]), int(split_ports[1]) + 1)])
@@ -78,7 +87,7 @@ def get_arguments():
     parser = argparse.ArgumentParser(description="Stealth TCP Port Scanner")
     parser.add_argument('-t', required=True, dest='target', help='IP Address to Scan')
     parser.add_argument('-p', required=False, dest='ports', help='Port Range (default: 1-1000)')
-    parser.add_argument('--threads', required=False, dest="threads", help="Maximum Number of Threads (default: 20)")
+    parser.add_argument('-v', required=False, action="store_true", help="Print Filtered Ports (default: False)")
 
     args = parser.parse_args()
 
@@ -92,10 +101,6 @@ def get_arguments():
 
         args.ports = "1-1000"
 
-    if args.threads is None:
-
-        args.threads = 20
-
     is_valid, port_type = filter_args(args.target, args.ports)
 
     if is_valid:
@@ -104,7 +109,7 @@ def get_arguments():
 
         try:
 
-            return args.target, args.ports, int(args.threads)
+            return args.target, args.ports, args.v
 
         except:
 
@@ -118,13 +123,30 @@ def get_arguments():
 
 if __name__ == '__main__':
 
-    target, ports, threads = get_arguments()
+    target, ports, verbose = get_arguments()
 
     scanner = TCPScan(target)
 
-    with ThreadPoolExecutor(max_workers=threads) as executor:
+    p1 = log.progress("Active threads")
+    count = 0
 
-        executor.map(scanner.scan_port, ports)
+    with ThreadPoolExecutor(max_workers=20) as executor:
+
+        futures = []
+
+        for port in ports:
+
+            count += 1
+            p1.status(f"{count}\n\n")
+            futures.append(executor.submit(scanner.scan_port, (port, verbose)))
+
+        for future in futures:
+
+            future.result()
+
+    p1.success("Scan completed!")
+
+    scanner.show_info()
 
     # Devolver cursor
     subprocess.run(["tput", "cnorm"])
