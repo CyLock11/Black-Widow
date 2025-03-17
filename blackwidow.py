@@ -130,6 +130,8 @@ if __name__ == '__main__':
     p1 = log.progress("Active threads")
     count = 0
 
+    subprocess.run(["tput", "civis"])
+    
     with ThreadPoolExecutor(max_workers=20) as executor:
 
         futures = []
